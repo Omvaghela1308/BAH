@@ -1,0 +1,9 @@
+torch
+torchvision
+streamlit
+opencv-python-headless
+Pillow
+numpy
+fpdf2
+scikit-image
+pytorch-fid

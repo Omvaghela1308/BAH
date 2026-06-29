@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+python312/
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Model weights
+weights/
+
+# IDE configurations
+.vscode/
+.idea/
+.project
+.pydevproject
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Runtime history logs
+history/
+
+# Data and plots
+data/
+loss_curve.png
+
