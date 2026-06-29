@@ -11,9 +11,6 @@ env/
 .env/
 ENV/
 
-# Model weights
-weights/
-
 # IDE configurations
 .vscode/
 .idea/
@@ -23,11 +20,3 @@ weights/
 # System files
 .DS_Store
 Thumbs.db
-
-# Runtime history logs
-history/
-
-# Data and plots
-data/
-loss_curve.png
-
