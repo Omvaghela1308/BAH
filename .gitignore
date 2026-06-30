@@ -20,3 +20,6 @@ ENV/
 # System files
 .DS_Store
 Thumbs.db
+
+# Heavy assets / local execution outputs
+history/outputs/

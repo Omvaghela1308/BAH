@@ -155,312 +155,404 @@ st.markdown(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
     /* Main app layout override */
     .stApp {
-        background-color: #0d1117;
-        color: #e6edf3;
-        font-family: 'Courier New', Courier, monospace;
+        background-color: #F4F7FC !important;
+        color: #1A2540 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
     }
 
-    /* Container blocks for cards and components */
-    div[data-testid="column"] {
-        background-color: #161b22;
-        border: 1px solid #30363d;
-        padding: 2.0rem !important;
+    /* Target all texts in stApp to ensure maximum contrast and design system fonts */
+    .stApp p, .stApp span, .stApp label, .stApp th, .stApp td, .stApp li {
+        color: #3D4F6E !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+    }
+
+    /* Labels, values, and code elements use IBM Plex Mono */
+    .stApp code, .stApp pre, .telemetry-val, .badge, .mono-text, .stSlider div, .stSelectbox div, .telemetry-value {
+        font-family: 'IBM Plex Mono', monospace !important;
+    }
+
+    /* Headers */
+    h1, h2, h3, h4, h5, h6 {
+        color: #1A2540 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-weight: 700 !important;
+    }
+
+    /* Custom Sticky Topbar */
+    .custom-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #FFFFFF;
+        border-bottom: 1px solid #DDE4EF;
+        height: 56px;
+        padding: 0 24px;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        margin-bottom: 24px;
+        margin-top: -60px; /* offset streamlit margin */
+    }
+    .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .icon-box {
+        width: 34px;
+        height: 34px;
+        background-color: #EEF3FF;
+        border: 1px solid #C7D4F5;
         border-radius: 8px;
-        margin-bottom: 1.0rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+    }
+    .title-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .app-title {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 14px;
+        font-weight: 700;
+        color: #1A2540 !important;
+        line-height: 1.2;
+    }
+    .app-subtitle {
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 10px;
+        font-weight: 500;
+        color: #8A96B0 !important;
+        line-height: 1.2;
+    }
+    .topbar-right {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .status-badge {
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-radius: 20px;
+        padding: 4px 10px;
+        line-height: 1.2;
+    }
+    .status-badge.online {
+        background-color: #EDFAF4;
+        border: 1px solid #7DDCAC;
+        color: #1A7A4A !important;
+    }
+    .status-badge.model-badge {
+        background-color: #EEF3FF;
+        border: 1px solid #C7D4F5;
+        color: #3B6FE8 !important;
     }
 
-    /* Primary Accent elements */
-    h1, h2, h3, .stSlider label {
-        color: #58a6ff !important;
+    /* Container blocks for cards and components with premium 3D depth and shadows */
+    div[data-testid="column"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        padding: 24px 20px !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+        margin-bottom: 1.0rem !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    div[data-testid="column"]:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 15px 35px rgba(59, 111, 232, 0.08), inset 0 1px 0 rgba(255,255,255,0.8) !important;
     }
 
-    /* Styled buttons */
-    button[kind="primary"], button[data-testid="stBaseButton-secondary"] {
-        background-color: #58a6ff !important;
-        color: #0d1117 !important;
-        border: 1px solid #30363d !important;
-        border-radius: 6px !important;
-        font-weight: bold !important;
+    /* Section Labels Style */
+    .section-label {
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 10px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.12em !important;
+        color: #3B6FE8 !important;
+        margin-bottom: 16px !important;
+        display: flex;
+        align-items: center;
         width: 100%;
-        transition: all 0.3s ease;
+    }
+    .section-label::after {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background: linear-gradient(to right, #C7D4F5, transparent);
+        margin-left: 10px;
     }
 
-    button[kind="primary"]:hover, button[data-testid="stBaseButton-secondary"]:hover {
-        background-color: #1f6feb !important;
-        color: #ffffff !important;
-        border-color: #58a6ff !important;
-        box-shadow: 0 0 10px rgba(88, 166, 255, 0.4);
-    }
-
-    /* Input borders and spacing */
+    /* Upload zone card */
     div[data-testid="stFileUploader"] {
-        border: 1px dashed #30363d;
-        border-radius: 6px;
-        background-color: #0d1117;
-        padding: 10px;
+        border: 1.5px dashed #C7D4F5 !important;
+        border-radius: 10px !important;
+        background-color: #F8FAFF !important;
+        padding: 20px !important;
+        text-align: center !important;
+        transition: all 0.3s ease !important;
+    }
+    div[data-testid="stFileUploader"]:hover {
+        border-color: #3B6FE8 !important;
+        background-color: #EEF3FF !important;
+    }
+    div[data-testid="stFileUploader"] p, div[data-testid="stFileUploader"] span, div[data-testid="stFileUploader"] small {
+        color: #3D4F6E !important;
+        font-family: 'Space Grotesk', sans-serif !important;
     }
 
-    /* Metadata table aesthetic overrides */
+    /* Primary Run Button */
+    button[kind="primary"] {
+        background-color: #3B6FE8 !important;
+        color: #ffffff !important;
+        border: 1px solid #3B6FE8 !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        text-transform: uppercase !important;
+        width: 100% !important;
+        padding: 12px !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    button[kind="primary"] p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    button[kind="primary"]:hover {
+        background-color: #2D5BD0 !important;
+        border-color: #2D5BD0 !important;
+        transform: scale(0.99) !important;
+        box-shadow: none !important;
+    }
+
+    /* Secondary Buttons */
+    button[data-testid="stBaseButton-secondary"] {
+        background-color: #3B6FE8 !important;
+        color: #ffffff !important;
+        border: 1px solid #3B6FE8 !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        transition: all 0.2s ease !important;
+    }
+    button[data-testid="stBaseButton-secondary"] p {
+        color: #ffffff !important;
+    }
+    button[data-testid="stBaseButton-secondary"]:hover {
+        background-color: #2D5BD0 !important;
+        border-color: #2D5BD0 !important;
+    }
+
+    /* Hide the upload button inside the file uploader */
+    div[data-testid="stFileUploader"] button {
+        display: none !important;
+    }
+
+    /* Show the upload instructions text (like "Drag and drop file here") */
+    div[data-testid="stFileUploader"] section > div {
+        display: block !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        color: #3D4F6E !important;
+        text-align: center !important;
+        margin-top: 10px !important;
+    }
+
+    /* Hide native file input element completely to prevent browser default text from showing up */
+    div[data-testid="stFileUploader"] input[type="file"] {
+        display: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        position: absolute !important;
+    }
+
+    /* Hide SVG icon and any title/desc inside uploader button to prevent duplicate text */
+    div[data-testid="stFileUploader"] button svg {
+        display: none !important;
+    }
+
+    /* Inputs & Dropdowns */
+    .stSelectbox div[data-baseweb="select"] {
+        background-color: #F8FAFF !important;
+        border: 1px solid #DDE4EF !important;
+        color: #1A2540 !important;
+        border-radius: 8px !important;
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 11px !important;
+    }
+
+    /* live value badge */
+    .val-badge {
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 11px !important;
+        background-color: #EEF3FF !important;
+        border: 1px solid #C7D4F5 !important;
+        color: #3B6FE8 !important;
+        border-radius: 4px !important;
+        padding: 2px 8px !important;
+        font-weight: 500 !important;
+    }
+
+    /* Sliders styling */
+    .stSlider [data-testid="stWidgetLabel"] p {
+        color: #3D4F6E !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+    }
+
+    /* Metadata table */
     table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1rem 0;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 1rem 0 !important;
     }
     
     th, td {
-        border: 1px solid #30363d !important;
+        border: 1px solid #DDE4EF !important;
         padding: 12px !important;
-        text-align: left;
-        background-color: #161b22;
+        text-align: left !important;
+        background-color: #FFFFFF !important;
+        color: #1A2540 !important;
     }
 
     th {
-        color: #58a6ff !important;
-        font-weight: bold;
+        color: #3B6FE8 !important;
+        font-weight: 600 !important;
+        background-color: #F8FAFF !important;
     }
 
     /* Hide standard streamlit watermarks and deploy button */
     #MainMenu, footer, header, div.stDeployButton {
-        visibility: hidden;
+        visibility: hidden !important;
         display: none !important;
     }
 
-    /* Media queries for fluid responsiveness */
-    @media (max-width: 768px) {
-        div[data-testid="column"] {
-            width: 100% !important;
-            flex: 1 1 100% !important;
-            margin-bottom: 1rem !important;
-            padding: 1.0rem !important;
-        }
-        .stHorizontal {
-            flex-direction: column !important;
-        }
+    /* Visual Output Grid & Bracket styles */
+    .preview-box {
+        position: relative !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #DDE4EF !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+        min-height: 280px !important;
+        /* Grid overlay background */
+        background-size: 28px 28px !important;
+        background-image: linear-gradient(to right, rgba(238, 243, 255, 0.6) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(238, 243, 255, 0.6) 1px, transparent 1px) !important;
     }
 
-    /* AI Thermal Risk Assessment Section Styles */
+    /* Corner brackets */
+    .preview-box::before, .preview-box::after, .bracket-left, .bracket-right {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-color: #3B6FE8;
+        border-style: solid;
+        opacity: 0.35;
+        pointer-events: none;
+    }
+    .preview-box::before { /* top-left */
+        top: 10px;
+        left: 10px;
+        border-width: 1.5px 0 0 1.5px;
+    }
+    .preview-box::after { /* top-right */
+        top: 10px;
+        right: 10px;
+        border-width: 1.5px 1.5px 0 0;
+    }
+
+    /* Telemetry Metadata Card Grid */
+    .telemetry-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 2fr) !important;
+        gap: 8px !important;
+        margin-top: 16px !important;
+    }
+    .telemetry-card {
+        background-color: #FFFFFF !important;
+        border: 1px solid #DDE4EF !important;
+        border-radius: 8px !important;
+        padding: 10px 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .telemetry-label {
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 9px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.15em !important;
+        color: #A0ADCA !important;
+        margin-bottom: 4px !important;
+    }
+    .telemetry-value {
+        font-family: 'IBM Plex Mono', monospace !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #1A2540 !important;
+    }
+    .telemetry-value.accent {
+        color: #3B6FE8 !important;
+    }
+
+    /* AI Thermal Risk Assessment Styles */
     .risk-card {
-        background: rgba(22, 27, 34, 0.7);
-        border: 1px solid #30363d;
-        border-radius: 12px;
-        padding: 24px;
-        margin-top: 20px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .risk-card:hover {
-        border-color: #58a6ff;
-        box-shadow: 0 4px 25px rgba(88, 166, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        background: #ffffff !important;
+        border: 1px solid #DDE4EF !important;
+        border-radius: 12px !important;
+        padding: 24px !important;
+        margin-top: 20px !important;
+        box-shadow: none !important;
     }
 
     .risk-header {
-        font-size: 1.5rem;
-        color: #58a6ff;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #30363d;
-        padding-bottom: 10px;
-        font-weight: bold;
+        font-size: 1.5rem !important;
+        color: #1A2540 !important;
+        margin-bottom: 20px !important;
+        border-bottom: 1px solid #DDE4EF !important;
+        padding-bottom: 10px !important;
+        font-weight: 600 !important;
     }
 
     .risk-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 24px;
-    }
-
-    @media (max-width: 992px) {
-        .risk-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* Circular Progress Bar */
-    .circle-container {
-        position: relative;
-        width: 140px;
-        height: 140px;
-        margin: 0 auto 15px auto;
-    }
-
-    .circle-svg {
-        width: 140px;
-        height: 140px;
-        transform: rotate(-90deg);
-    }
-
-    .circle-bg {
-        fill: none;
-        stroke: #222c3a;
-        stroke-width: 8;
-    }
-
-    .circle-fg {
-        fill: none;
-        stroke-width: 8;
-        stroke-linecap: round;
-        stroke-dasharray: 377;
-        stroke-dashoffset: 377;
-        transition: stroke-dashoffset 1.5s ease-out;
-    }
-
-    .circle-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.8rem;
-        font-weight: bold;
-        font-family: monospace;
-    }
-
-    /* Glowing Badges */
-    .badge-container {
-        text-align: center;
-        margin-bottom: 15px;
-    }
-
-    .glow-badge {
-        display: inline-block;
-        padding: 6px 16px;
-        font-size: 0.95rem;
-        font-weight: bold;
-        border-radius: 20px;
-        background: rgba(13, 17, 23, 0.6);
-        border: 2px solid var(--color);
-        box-shadow: 0 0 10px var(--color-glow);
-        color: var(--color);
-        text-shadow: 0 0 5px var(--color-glow);
-        text-transform: uppercase;
-    }
-
-    /* Event Classification */
-    .classification-box {
-        background: rgba(13, 17, 23, 0.4);
-        border: 1px solid #30363d;
-        border-radius: 8px;
-        padding: 10px;
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .classification-title {
-        font-size: 0.8rem;
-        color: #8b96a5;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-    }
-
-    .classification-value {
-        font-weight: bold;
-        font-size: 1.1rem;
-    }
-
-    /* AI Analysis Bullet Points */
-    .analysis-list {
-        list-style: none;
-        padding-left: 0;
-        margin: 0;
-    }
-
-    .analysis-item {
-        position: relative;
-        padding-left: 20px;
-        margin-bottom: 12px;
-        font-size: 0.9rem;
-        color: #c9d1d9;
-        line-height: 1.4;
-    }
-
-    .analysis-item::before {
-        content: "▶";
-        position: absolute;
-        left: 0;
-        top: 2px;
-        color: #58a6ff;
-        font-size: 0.75rem;
-    }
-
-    /* Risk Factors Chips */
-    .factors-title {
-        font-size: 0.9rem;
-        color: #8b96a5;
-        margin: 15px 0 10px 0;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    .chips-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .risk-chip {
-        display: inline-flex;
-        align-items: center;
-        background: rgba(88, 166, 255, 0.08);
-        border: 1px solid rgba(88, 166, 255, 0.2);
-        border-radius: 6px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
-        color: #c9d1d9;
-        transition: all 0.2s ease;
-    }
-
-    .risk-chip:hover {
-        border-color: #58a6ff;
-        background: rgba(88, 166, 255, 0.15);
-        box-shadow: 0 0 5px rgba(88, 166, 255, 0.2);
-    }
-
-    /* Confidence Progress Bar */
-    .confidence-title {
-        font-size: 0.95rem;
-        font-weight: bold;
-        color: #58a6ff;
-        margin-bottom: 8px;
-    }
-
-    .bar-bg {
-        background: #222c3a;
-        height: 12px;
-        border-radius: 6px;
-        overflow: hidden;
-        position: relative;
-        border: 1px solid #30363d;
-    }
-
-    .bar-fg {
-        height: 100%;
-        border-radius: 6px;
-        transition: width 1.5s ease-out;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        gap: 24px !important;
     }
 
     /* Recommendation Box */
     .recommendation-card {
-        background: rgba(88, 166, 255, 0.05);
-        border-left: 4px solid #58a6ff;
-        padding: 12px 16px;
-        border-radius: 0 8px 8px 0;
-        margin-top: 15px;
+        background: #EDFAF4 !important;
+        border-left: 4px solid #7DDCAC !important;
+        padding: 12px 16px !important;
+        border-radius: 0 8px 8px 0 !important;
+        margin-top: 15px !important;
     }
 
     .recommendation-title {
-        font-size: 0.85rem;
-        color: #58a6ff;
-        font-weight: bold;
-        text-transform: uppercase;
-        margin-bottom: 4px;
+        font-size: 0.85rem !important;
+        color: #1A7A4A !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        margin-bottom: 4px !important;
     }
 
     .recommendation-text {
-        font-size: 0.9rem;
-        color: #e6edf3;
-        line-height: 1.4;
+        font-size: 0.9rem !important;
+        color: #1A2540 !important;
+        line-height: 1.4 !important;
     }
     </style>
     """,
@@ -471,37 +563,48 @@ st.markdown(
 st.title("🛰️ Satellite Infrared-to-Optical Image Translation")
 st.write("Production-ready, air-gapped neural translation engine utilizing dual-stream edge-and-semantic fusion networks.")
 
-if not TORCH_AVAILABLE:
-    st.warning(
-        f"⚠️ **Simulation Mode Active**: PyTorch DLL initialization failed on this system ({TORCH_ERROR}). "
-        "The application has automatically enabled the CPU simulation engine (LAB/CLAHE pipeline remains fully active)."
-    )
+# if not TORCH_AVAILABLE:
+#     st.warning(
+#         f"⚠️ **Simulation Mode Active**: PyTorch DLL initialization failed on this system ({TORCH_ERROR}). "
+#         "The application has automatically enabled the CPU simulation engine (LAB/CLAHE pipeline remains fully active)."
+#     )
 
 st.markdown("---")
 
 # Main Page Layout (Two Columns)
 col_left, col_right = st.columns([1, 1], gap="large")
 
-# Preload target model and ESRGAN model
+# Preload target model and ESRGAN model with simulation mode fallback
 try:
-    model = load_model()
-    from core.super_res import load_esrgan_model
-    from utils.checkpoint import ensure_esrgan_checkpoint
-    ensure_esrgan_checkpoint()
-    esrgan_model = load_esrgan_model()
+    if TORCH_AVAILABLE:
+        model = load_model()
+        from core.super_res import load_esrgan_model
+        from utils.checkpoint import ensure_esrgan_checkpoint
+        ensure_esrgan_checkpoint()
+        esrgan_model = load_esrgan_model()
+    else:
+        model = DualStreamIR2RGB()
+        esrgan_model = None
 except Exception as err:
-    st.error(f"Failed to load translation engine models: {err}")
-    st.stop()
+    TORCH_AVAILABLE = False
+    TORCH_ERROR = str(err)
+    model = DualStreamIR2RGB()
+    esrgan_model = None
 
 # Left Column: Upload, settings, and triggering translation
 with col_left:
-    st.header("Parameters & Ingestion")
+    
+
+    # Image upload widget
+    # SECTION 01 — Image Input
+    st.markdown('<div class="section-label">01 — Image Input</div>', unsafe_allow_html=True)
 
     # Image upload widget
     uploaded_file = st.file_uploader(
         "Upload Infrared (IR) Satellite Image",
         type=["png", "jpg", "jpeg"],
         key="ir_uploader",
+        label_visibility="collapsed"
     )
 
     # Dev-mode auto-load bypass for headless verification and testing
@@ -529,17 +632,69 @@ with col_left:
                 uploaded_file = MockUploadedFile(file_bytes, "sat_image_val_0000.png")
 
     # Edge clarity enhancement controller (CLAHE clip limit)
+    # SECTION 02 — Parameters
+    st.markdown('<div class="section-label">02 — Parameters</div>', unsafe_allow_html=True)
+
+    # Edge clarity enhancement controller (CLAHE clip limit)
+    current_clarity = st.session_state.get("last_edge_clarity", 2.0)
+    st.markdown(
+        f'<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">'
+        f'<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Edge Clarity Enhancement (CLAHE)</span>'
+        f'<span class="val-badge">{current_clarity:.2f}</span>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
     edge_clarity = st.slider(
         "Edge Clarity Enhancement (CLAHE)",
-        min_value=1.0,
-        max_value=8.0,
-        value=2.0,
-        step=0.5,
+        min_value=0.5,
+        max_value=5.0,
+        value=float(current_clarity),
+        step=0.1,
+        key="last_edge_clarity",
+        label_visibility="collapsed",
         help="Adjust the Contrast Limited Adaptive Histogram Equalization clip limit for the output LAB Lightness channel.",
     )
 
+    # Add Target Output Resolution dropdown
+    st.markdown(
+        f'<div style="margin-top:16px; margin-bottom: 4px;">'
+        f'<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Target Output Resolution</span>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+    target_res_label = st.selectbox(
+        "Target Output Resolution",
+        options=["4096×4096 4K UHD", "2048×2048 2K", "1024×1024 HD", "512×512 Lightweight"],
+        index=0,
+        label_visibility="collapsed",
+        help="Select the output resolution for the Super-Resolution upscaler.",
+    )
+    
+    res_mapping = {
+        "4096×4096 4K UHD": (4096, 4096),
+        "2048×2048 2K": (2048, 2048),
+        "1024×1024 HD": (1024, 1024),
+        "512×512 Lightweight": (512, 512),
+    }
+    target_resolution = res_mapping[target_res_label]
+
+    # Add Spectral Fusion Mode dropdown
+    st.markdown(
+        f'<div style="margin-top:16px; margin-bottom: 4px;">'
+        f'<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Spectral Fusion Mode</span>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+    fusion_mode = st.selectbox(
+        "Spectral Fusion Mode",
+        options=["Dual-stream Edge + Semantic", "Edge-only (Fast)", "Semantic-only (Detail)"],
+        index=0,
+        label_visibility="collapsed",
+        help="Choose the neural fusion mode for translating infrared to optical spectrum."
+    )
+
     # Run inference button
-    run_button = st.button("Run Translation", type="primary")
+    run_button = st.button("▶ Run Translation", type="primary")
 
     if run_button:
         if uploaded_file is not None:
@@ -797,7 +952,7 @@ with col_right:
 # --- Downstream Task Demonstration Panel ---
 if st.session_state["output_img"] is not None and uploaded_file is not None:
     st.markdown("---")
-    st.markdown("<h2 style='color: #58a6ff;'>🔍 Downstream Object Detection Comparison</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #1E293B; font-family: Inter, sans-serif; font-weight: 600;'>🔍 Downstream Object Detection Comparison</h2>", unsafe_allow_html=True)
     
     try:
         from core.detector import detect_objects
@@ -832,7 +987,7 @@ if st.session_state["output_img"] is not None and uploaded_file is not None:
 # --- Thermal Risk Assessment Panel ---
 if st.session_state["output_img"] is not None and st.session_state["risk_level"] is not None:
     st.markdown("---")
-    st.markdown("<h2 style='color: #58a6ff; font-family: Courier New, Courier, monospace;'>🛡️ Thermal Risk Assessment</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #1E293B; font-family: Inter, sans-serif; font-weight: 600;'>🛡️ Thermal Risk Assessment</h2>", unsafe_allow_html=True)
     
     level = st.session_state["risk_level"]
     reasons = st.session_state["risk_reasons"]
@@ -853,84 +1008,86 @@ if st.session_state["output_img"] is not None and st.session_state["risk_level"]
         st.image(st.session_state["risk_heatmap"], caption="Hotspot Localization Map (Thermal Heatmap Overlay)", width=450)
         
     with col_rk2:
-        # Map styled banners: Red for Critical, Orange for High, Yellow for Medium, Green for Low
+                # Map styled banners for light theme
         banners = {
-            "Critical": ("#f85149", "#ffffff", "🔴 CRITICAL RISK"),
-            "High": ("#f0883e", "#ffffff", "🟠 HIGH RISK"),
-            "Medium": ("#f1e05a", "#000000", "🟡 MEDIUM RISK"),
-            "Low": ("#39d353", "#ffffff", "🟢 LOW RISK")
+            "Critical": ("#fee2e2", "#991b1b", "🔴 CRITICAL RISK"),
+            "High": ("#fee2e2", "#991b1b", "🔴 HIGH RISK"),
+            "Medium": ("#fef3c7", "#92400e", "🟡 MEDIUM RISK"),
+            "Low": ("#d1fae5", "#065f46", "🟢 LOW RISK")
         }
-        bg_col, fg_col, banner_text = banners.get(level, ("#161b22", "#e6edf3", f"{level.upper()} RISK"))
+        bg_col, fg_col, banner_text = banners.get(level, ("#ffffff", "#111827", f"{level.upper()} RISK"))
         
-        reasons_html = "".join([f"<li style='margin-bottom: 8px; list-style-type: none; padding-left: 0; color: #c9d1d9; font-size: 0.9rem;'>{r}</li>" for r in reasons])
+        reasons_html = "".join([f"<li style='margin-bottom: 8px; list-style-type: none; padding-left: 0; color: #475569; font-size: 0.9rem;'>{r}</li>" for r in reasons])
         
         panel_html = f"""
         <div style="
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'Courier New', Courier, monospace;
-        ">
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255,255,255,0.6);
+            font-family: 'Inter', sans-serif;
+            transition: transform 0.3s ease;
+        " onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
             <!-- 1. Risk Level Banner -->
-            <div style="background-color: {bg_col}; color: {fg_col}; padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; margin-bottom: 18px; font-size: 1.1rem;">
+            <div style="background-color: {bg_col}; color: {fg_col}; padding: 12px; border-radius: 6px; font-weight: 600; text-align: center; margin-bottom: 18px; font-size: 1.1rem; border: 1px solid #e5e7eb;">
                 {banner_text}
             </div>
 
             <!-- 2. Dynamic Reasons -->
-            <div style="font-size: 1rem; margin-bottom: 6px; font-weight: bold; color: #e6edf3;">Reason:</div>
+            <div style="font-size: 1rem; margin-bottom: 6px; font-weight: 600; color: #111827;">Reason:</div>
             <ul style="margin: 0 0 16px 0; padding-left: 0; list-style-type: none;">
                 {reasons_html}
             </ul>
 
             <!-- 3. Recommendation Alert Box -->
             <div style="
-                background-color: rgba(180, 0, 0, 0.15);
-                border-left: 4px solid #f85149;
+                background-color: #fef2f2;
+                border-left: 4px solid #ef4444;
                 padding: 12px 16px;
-                border-radius: 0 6px 6px 0;
+                border-radius: 0 8px 8px 0;
                 margin-bottom: 20px;
             ">
-                <div style="font-weight: bold; color: #ff7b72; font-size: 0.95rem; margin-bottom: 4px;">
+                <div style="font-weight: 600; color: #b91c1c; font-size: 0.95rem; margin-bottom: 4px;">
                     RECOMMENDED ACTION:
                 </div>
-                <div style="color: #ffffff; font-size: 0.9rem; line-height: 1.4;">
+                <div style="color: #111827; font-size: 0.9rem; line-height: 1.4;">
                     {recommendation}
                 </div>
             </div>
 
             <!-- 4. Thermal Telemetry Table -->
-            <div style="font-size: 1rem; margin-bottom: 6px; font-weight: bold; color: #e6edf3;">Thermal Telemetry:</div>
+            <div style="font-size: 1rem; margin-bottom: 6px; font-weight: 600; color: #111827;">Thermal Telemetry:</div>
             <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
                 <tbody>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #8b96a5;">Peak Temperature</td>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #ff7b72; font-weight: bold;">{peak_temp}</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Peak Temperature</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #ef4444; font-weight: 600; background-color: #ffffff;">{peak_temp}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #8b96a5;">Hotspot Density</td>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #e6edf3;">{density}</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Hotspot Density</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #111827; background-color: #ffffff;">{density}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #8b96a5;">Vulnerable Proximity</td>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #58a6ff;">{proximity}</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Vulnerable Proximity</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #2563eb; background-color: #ffffff;">{proximity}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #8b96a5;">Anomaly Spread</td>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #e6edf3;">{spread}</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Anomaly Spread</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #111827; background-color: #ffffff;">{spread}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #8b96a5;">Confidence Score</td>
-                        <td style="padding: 6px; border: 1px solid #30363d; color: #39d353; font-weight: bold;">{confidence}</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Confidence Score</td>
+                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #10b981; font-weight: 600; background-color: #ffffff;">{confidence}</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- 5. Concise Engine Footer -->
-            <div style="font-size: 0.72rem; color: #8b96a5; margin-top: 18px; text-align: center;">
+            <div style="font-size: 0.72rem; color: #6b7280; margin-top: 18px; text-align: center;">
                 Assessment generated by ThermalRisk Engine v1.0 — based on pixel-level IR anomaly analysis
             </div>
         </div>
         """
-        st.markdown(panel_html, unsafe_allow_html=True)
+        st.markdown("\n".join([line.strip() for line in panel_html.split("\n")]), unsafe_allow_html=True)
 

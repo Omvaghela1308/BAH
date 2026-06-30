@@ -9,9 +9,9 @@ enableCORS = true
 enableXsrfProtection = true
 
 [theme]
-base = "dark"
-primaryColor = "#58a6ff"
-backgroundColor = "#0d1117"
-secondaryBackgroundColor = "#161b22"
-textColor = "#e6edf3"
-font = "monospace"
+base = "light"
+primaryColor = "#6366F1"
+backgroundColor = "#F7FAFA"
+secondaryBackgroundColor = "#F8FAFF"
+textColor = "#1E293B"
+font = "sans serif"
