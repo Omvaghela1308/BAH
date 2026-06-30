@@ -846,16 +846,33 @@ with col_right:
             mask_pil = Image.fromarray(st.session_state["mask_img"])
             sr_pil = Image.fromarray(st.session_state["sr_img"])
 
-            # Render Preview Area with grid overlay and corner brackets
-            st.markdown('<div class="preview-box">', unsafe_allow_html=True)
-            col_img1, col_img2 = st.columns(2)
-            with col_img1:
-                st.markdown('<div style="background:#EEF3FF; color:#3B6FE8; font-family:\'IBM Plex Mono\'; font-size:10px; padding:2px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; font-weight:600;">INPUT: IR</div>', unsafe_allow_html=True)
-                st.image(input_gray_pil, width='stretch')
-            with col_img2:
-                st.markdown('<div style="background:#EEF3FF; color:#3B6FE8; font-family:\'IBM Plex Mono\'; font-size:10px; padding:2px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; font-weight:600;">OUTPUT: RGB</div>', unsafe_allow_html=True)
-                st.image(sr_pil, width='stretch')
-            st.markdown('</div>', unsafe_allow_html=True)
+            # Encode images to base64 to ensure they render inside the styled preview-box container
+            import base64
+            def to_b64(img):
+                buf = io.BytesIO()
+                img.save(buf, format="PNG")
+                return base64.b64encode(buf.getvalue()).decode()
+            
+            ir_b64 = to_b64(input_gray_pil)
+            rgb_b64 = to_b64(sr_pil)
+
+            st.markdown(
+                f"""
+                <div class="preview-box">
+                    <div style="display: flex; gap: 20px; justify-content: space-between; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <div style="background: #EEF3FF; color: #3B6FE8; font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; font-weight: 600;">INPUT: IR</div>
+                            <img src="data:image/png;base64,{ir_b64}" style="width: 100%; border-radius: 12px; border: 1px solid rgba(226, 232, 240, 0.8); transition: transform 0.4s ease;" class="preview-img" />
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <div style="background: #EEF3FF; color: #3B6FE8; font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 12px; font-weight: 600;">OUTPUT: RGB</div>
+                            <img src="data:image/png;base64,{rgb_b64}" style="width: 100%; border-radius: 12px; border: 1px solid rgba(226, 232, 240, 0.8); transition: transform 0.4s ease;" class="preview-img" />
+                        </div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
             # Rest of the features: download, additional masks, etc.
             st.markdown('<div style="margin-top: 16px;"></div>', unsafe_allow_html=True)

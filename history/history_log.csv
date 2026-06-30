@@ -79,3 +79,4 @@ Timestamp,Original Filename,Width,Height,Inference Time (ms),CLAHE Limit,Output 
 2026-06-30 22:49:09,3.jpeg,700,599,49.36,2.0,history\outputs\3_20260630_224909.png
 2026-06-30 22:51:46,3.jpeg,700,599,48.75,2.7,history\outputs\3_20260630_225146.png
 2026-06-30 22:52:07,3.jpeg,700,599,49.85,5.0,history\outputs\3_20260630_225207.png
+2026-06-30 23:39:35,3.jpeg,700,599,76.66,4.1,history\outputs\3_20260630_233935.png
