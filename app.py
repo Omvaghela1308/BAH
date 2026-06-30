@@ -833,9 +833,9 @@ with col_left:
             st.warning("Please upload a valid Infrared (IR) satellite image before executing the translation model.")
 
 
-# Right Column: Displays results, mask, table, and upscaling
 with col_right:
-    st.header("Visual Verification & Metadata")
+    # 03 — Visual Output & Metadata
+    st.markdown('<div class="section-label">03 — Visual Output & Metadata</div>', unsafe_allow_html=True)
 
     if st.session_state["output_img"] is not None and uploaded_file is not None:
         try:
@@ -844,115 +844,206 @@ with col_right:
             input_gray_pil = ImageOps.grayscale(uploaded_pil).resize((256, 256))
             output_pil = Image.fromarray(st.session_state["output_img"])
             mask_pil = Image.fromarray(st.session_state["mask_img"])
-
-            # 1. Visual Verification (3 columns side-by-side: IR, RGB, Semantic Mask)
-            col_v1, col_v2, col_v3 = st.columns(3)
-            with col_v1:
-                st.image(input_gray_pil, caption="Input (IR)", width=180)
-            with col_v2:
-                st.image(output_pil, caption="Output (RGB)", width=180)
-            with col_v3:
-                st.image(mask_pil, caption="Semantic Land Cover Mask", width=180)
-
-            # 2. Super-Resolution Enhancement Subsection
-            st.markdown("---")
-            st.subheader("Super-Resolution Enhancement")
             sr_pil = Image.fromarray(st.session_state["sr_img"])
-            st.image(sr_pil, caption="Enhanced Output (512x512)", width=480)
 
-            # Calculate network parameter size
-            param_count = sum(p.numel() for p in model.parameters())
+            # Render Preview Area with grid overlay and corner brackets
+            st.markdown('<div class="preview-box">', unsafe_allow_html=True)
+            col_img1, col_img2 = st.columns(2)
+            with col_img1:
+                st.markdown('<div style="background:#EEF3FF; color:#3B6FE8; font-family:\'IBM Plex Mono\'; font-size:10px; padding:2px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; font-weight:600;">INPUT: IR</div>', unsafe_allow_html=True)
+                st.image(input_gray_pil, width='stretch')
+            with col_img2:
+                st.markdown('<div style="background:#EEF3FF; color:#3B6FE8; font-family:\'IBM Plex Mono\'; font-size:10px; padding:2px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; font-weight:600;">OUTPUT: RGB</div>', unsafe_allow_html=True)
+                st.image(sr_pil, width='stretch')
+            st.markdown('</div>', unsafe_allow_html=True)
 
-            # 3. Metadata table representation
-            metadata_html = f"""
-            <table>
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Operational Resolution</td>
-                        <td>256 &times; 256 pixels</td>
-                    </tr>
-                    <tr>
-                        <td>Input Resolution</td>
-                        <td>{st.session_state["input_res"]}</td>
-                    </tr>
-                    <tr>
-                        <td>Output Resolution</td>
-                        <td>{st.session_state["output_res"]}</td>
-                    </tr>
-                    <tr>
-                        <td>Inference Execution Time</td>
-                        <td>{st.session_state["inference_time_ms"]:.2f} ms</td>
-                    </tr>
-                    <tr>
-                        <td> - Enhancement Stage</td>
-                        <td>{st.session_state["time_enhancement"]:.2f} ms</td>
-                    </tr>
-                    <tr>
-                        <td> - Colorization Stage</td>
-                        <td>{st.session_state["time_colorization"]:.2f} ms</td>
-                    </tr>
-                    <tr>
-                        <td> - Super-Resolution Stage</td>
-                        <td>{st.session_state["time_super_res"]:.2f} ms</td>
-                    </tr>
-                    <tr>
-                        <td>CLAHE Clip Limit</td>
-                        <td>{edge_clarity:.1f}</td>
-                    </tr>
-                    <tr>
-                        <td>Model Parameters</td>
-                        <td>{param_count:,}</td>
-                    </tr>
-                    <tr>
-                        <td>PSNR</td>
-                        <td>{st.session_state["psnr"]}</td>
-                    </tr>
-                    <tr>
-                        <td>SSIM</td>
-                        <td>{st.session_state["ssim"]}</td>
-                    </tr>
-                    <tr>
-                        <td>FID</td>
-                        <td>{st.session_state["fid"]}</td>
-                    </tr>
-                    <tr>
-                        <td>Logged Output Path</td>
-                        <td><code>{st.session_state.get('saved_path', 'N/A')}</code></td>
-                    </tr>
-                </tbody>
-            </table>
-            """
-            st.markdown(metadata_html, unsafe_allow_html=True)
+            # Rest of the features: download, additional masks, etc.
+            st.markdown('<div style="margin-top: 16px;"></div>', unsafe_allow_html=True)
+            col_d1, col_d2 = st.columns(2)
+            with col_d1:
+                st.subheader("Semantic Land Cover Mask")
+                st.image(mask_pil, width='stretch')
+            with col_d2:
+                st.subheader("Download Section")
+                
+                # Generate PDF Report bytes
+                from core.report import generate_pdf_report
+                import datetime
 
-            # 4. Download Button Logic
-            img_bytes = io.BytesIO()
-            sr_pil.save(img_bytes, format="PNG")
-            data = img_bytes.getvalue()
+                threat_level_upper = st.session_state["risk_level"].upper()
+                if threat_level_upper == "CRITICAL":
+                    risk_score = 90
+                    classification_data = {"name": "Emergency", "color": "#f85149"}
+                elif threat_level_upper == "HIGH":
+                    risk_score = 75
+                    classification_data = {"name": "Critical", "color": "#f0883e"}
+                elif threat_level_upper == "MEDIUM":
+                    risk_score = 45
+                    classification_data = {"name": "Suspicious", "color": "#f1e05a"}
+                else:
+                    risk_score = 15
+                    classification_data = {"name": "Normal", "color": "#39d353"}
 
-            st.download_button(
-                label="Download Translated Image",
-                data=data,
-                file_name="translated_optical_enhanced.png",
-                mime="image/png",
-            )
+                confidence_str = st.session_state["risk_stats"].get("confidence", "90.0%")
+                try:
+                    confidence_val = float(confidence_str.replace("%", ""))
+                except Exception:
+                    confidence_val = 90.0
+
+                # Determine active risk factors
+                risk_factors = []
+                obj_cnt = st.session_state.get("objects_detected_count", 0)
+                if obj_cnt > 0:
+                    risk_factors.append("Human Presence")
+                if threat_level_upper in ["HIGH", "CRITICAL"]:
+                    risk_factors.append("High Heat")
+                if len(st.session_state["risk_reasons"]) > 2:
+                    risk_factors.append("Thermal Cluster")
+
+                report_data = {
+                    "image_name": uploaded_file.name,
+                    "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "processing_time_ms": st.session_state["inference_time_ms"] if st.session_state["inference_time_ms"] is not None else 0.0,
+                    "objects_detected": obj_cnt,
+                    "confidence": confidence_val,
+                    "threat_level": threat_level_upper,
+                    "risk_score": risk_score,
+                    "analysis_points": st.session_state["risk_reasons"],
+                    "classification": classification_data,
+                    "risk_factors": risk_factors,
+                    "recommendation": st.session_state["risk_recommendation"]
+                }
+                
+                try:
+                    pdf_bytes = generate_pdf_report(report_data)
+                except Exception as e:
+                    st.error(f"Failed to generate PDF Report: {e}")
+                    pdf_bytes = b""
+
+                # Download Button Logic
+                img_bytes = io.BytesIO()
+                sr_pil.save(img_bytes, format="PNG")
+                img_data = img_bytes.getvalue()
+
+                st.download_button(
+                    label="Download Translated Image",
+                    data=img_data,
+                    file_name="translated_optical_enhanced.png",
+                    mime="image/png",
+                )
+
+                st.markdown('<div style="margin-top: 10px;"></div>', unsafe_allow_html=True)
+                if pdf_bytes:
+                    st.download_button(
+                        label="Download PDF Assessment Report",
+                        data=pdf_bytes,
+                        file_name="thermal_risk_assessment_report.pdf",
+                        mime="application/pdf",
+                    )
+
+                # Create ZIP Archive of all generated images and PDF report
+                import zipfile
+                zip_buffer = io.BytesIO()
+                with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+                    # 1. Input image
+                    input_bytes = io.BytesIO()
+                    input_gray_pil.save(input_bytes, format="PNG")
+                    zip_file.writestr("01_input_infrared.png", input_bytes.getvalue())
+                    
+                    # 2. Enhanced Image
+                    enh_bytes = io.BytesIO()
+                    output_pil.save(enh_bytes, format="PNG")
+                    zip_file.writestr("02_enhanced_clahe.png", enh_bytes.getvalue())
+                    
+                    # 3. Super Resolution output
+                    sr_bytes = io.BytesIO()
+                    sr_pil.save(sr_bytes, format="PNG")
+                    zip_file.writestr("03_super_resolved_optical.png", sr_bytes.getvalue())
+                    
+                    # 4. Semantic Land Cover Mask
+                    mask_bytes = io.BytesIO()
+                    mask_pil.save(mask_bytes, format="PNG")
+                    zip_file.writestr("04_semantic_mask.png", mask_bytes.getvalue())
+                    
+                    # 5. Risk Heatmap
+                    if st.session_state.get("risk_heatmap") is not None:
+                        heatmap_pil = Image.fromarray(st.session_state["risk_heatmap"])
+                        heatmap_bytes = io.BytesIO()
+                        heatmap_pil.save(heatmap_bytes, format="PNG")
+                        zip_file.writestr("05_thermal_risk_heatmap.png", heatmap_bytes.getvalue())
+
+                    # 6. PDF Report
+                    if pdf_bytes:
+                        zip_file.writestr("06_risk_assessment_report.pdf", pdf_bytes)
+
+                st.markdown('<div style="margin-top: 10px;"></div>', unsafe_allow_html=True)
+                st.download_button(
+                    label="Download All Assets (ZIP)",
+                    data=zip_buffer.getvalue(),
+                    file_name="all_translated_assets.zip",
+                    mime="application/zip",
+                )
 
         except Exception as e:
             st.error(f"Visualization rendering failure: {str(e)}")
     else:
-        # Placeholder panel shown prior to execution
-        st.info("System idle. Upload an Infrared image and click 'Run Translation' to view the output.")
+        # Placeholder panel shown prior to execution (IDLE STATE)
+        st.markdown(
+            """
+            <div class="preview-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                <div style="width: 52px; height: 52px; background-color: #EEF3FF; border: 1px solid #C7D4F5; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px;">📸</div>
+                <div style="font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: #3D4F6E; margin-bottom: 4px;">No image loaded</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #A0ADCA; letter-spacing: 0.05em;">UPLOAD AN IR IMAGE AND RUN TRANSLATION</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # Telemetry Metadata Grid (rendered dynamically in both idle and complete states)
+    status_val = "Complete" if st.session_state["output_img"] is not None else "Idle"
+    input_bands_val = "3 bands" if uploaded_file is not None else "—"
+    clahe_val = f"{edge_clarity:.1f}"
+    out_res_val = target_res_label.split(" ")[0]
+    model_val = "DSF-NET"
+    inf_val = f"{st.session_state['inference_time_ms']/1000:.2f}s" if (st.session_state["output_img"] is not None and st.session_state.get("inference_time_ms") is not None) else "—"
+
+    st.markdown(
+        f"""
+        <div class="telemetry-grid">
+            <div class="telemetry-card">
+                <span class="telemetry-label">Status</span>
+                <span class="telemetry-value {'accent' if status_val == 'Complete' else ''}">{status_val}</span>
+            </div>
+            <div class="telemetry-card">
+                <span class="telemetry-label">Input Bands</span>
+                <span class="telemetry-value">{input_bands_val}</span>
+            </div>
+            <div class="telemetry-card">
+                <span class="telemetry-label">CLAHE Clip</span>
+                <span class="telemetry-value">{clahe_val}</span>
+            </div>
+            <div class="telemetry-card">
+                <span class="telemetry-label">Output Res</span>
+                <span class="telemetry-value">{out_res_val}</span>
+            </div>
+            <div class="telemetry-card">
+                <span class="telemetry-label">Model</span>
+                <span class="telemetry-value">{model_val}</span>
+            </div>
+            <div class="telemetry-card">
+                <span class="telemetry-label">Inference</span>
+                <span class="telemetry-value">{inf_val}</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 # --- Downstream Task Demonstration Panel ---
 if st.session_state["output_img"] is not None and uploaded_file is not None:
     st.markdown("---")
-    st.markdown("<h2 style='color: #1E293B; font-family: Inter, sans-serif; font-weight: 600;'>🔍 Downstream Object Detection Comparison</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #111827; font-family: Inter, sans-serif; font-weight: 600;'>🔍 Downstream Object Detection Comparison</h2>", unsafe_allow_html=True)
     
     try:
         from core.detector import detect_objects
@@ -987,7 +1078,7 @@ if st.session_state["output_img"] is not None and uploaded_file is not None:
 # --- Thermal Risk Assessment Panel ---
 if st.session_state["output_img"] is not None and st.session_state["risk_level"] is not None:
     st.markdown("---")
-    st.markdown("<h2 style='color: #1E293B; font-family: Inter, sans-serif; font-weight: 600;'>🛡️ Thermal Risk Assessment</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #111827; font-family: Inter, sans-serif; font-weight: 600;'>🛡️ Thermal Risk Assessment</h2>", unsafe_allow_html=True)
     
     level = st.session_state["risk_level"]
     reasons = st.session_state["risk_reasons"]
@@ -1008,7 +1099,7 @@ if st.session_state["output_img"] is not None and st.session_state["risk_level"]
         st.image(st.session_state["risk_heatmap"], caption="Hotspot Localization Map (Thermal Heatmap Overlay)", width=450)
         
     with col_rk2:
-                # Map styled banners for light theme
+        # Map styled banners for light theme
         banners = {
             "Critical": ("#fee2e2", "#991b1b", "🔴 CRITICAL RISK"),
             "High": ("#fee2e2", "#991b1b", "🔴 HIGH RISK"),
@@ -1025,10 +1116,9 @@ if st.session_state["output_img"] is not None and st.session_state["risk_level"]
             border: 1px solid #e5e7eb;
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255,255,255,0.6);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             font-family: 'Inter', sans-serif;
-            transition: transform 0.3s ease;
-        " onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        ">
             <!-- 1. Risk Level Banner -->
             <div style="background-color: {bg_col}; color: {fg_col}; padding: 12px; border-radius: 6px; font-weight: 600; text-align: center; margin-bottom: 18px; font-size: 1.1rem; border: 1px solid #e5e7eb;">
                 {banner_text}
@@ -1090,4 +1180,3 @@ if st.session_state["output_img"] is not None and st.session_state["risk_level"]
         </div>
         """
         st.markdown("\n".join([line.strip() for line in panel_html.split("\n")]), unsafe_allow_html=True)
-
