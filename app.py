@@ -12,6 +12,7 @@ import io
 import time
 # pyrefly: ignore [missing-import]
 import streamlit as st
+import streamlit.components.v1 as components
 # pyrefly: ignore [missing-import]
 from PIL import Image, ImageOps
 # pyrefly: ignore [missing-import]
@@ -69,6 +70,72 @@ except OSError as err:
 
 from core.postprocess import apply_clahe
 
+
+
+# Three.js 3D Globe Component
+GLOBE_HTML = """
+<div id="globe-container" style="width: 100%; height: 160px; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden;">
+    <canvas id="globe-canvas" style="width: 150px; height: 150px;"></canvas>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    const container = document.getElementById('globe-container');
+    const canvas = document.getElementById('globe-canvas');
+    
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.z = 18;
+    
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(150, 150);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Create wireframe globe
+    const geometry = new THREE.SphereGeometry(5.2, 16, 16);
+    const material = new THREE.MeshBasicMaterial({
+        color: 0x3B6FE8,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.5
+    });
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+    
+    // Create orbiting satellite particle
+    const satGeom = new THREE.SphereGeometry(0.35, 8, 8);
+    const satMat = new THREE.MeshBasicMaterial({ color: 0x10B981 });
+    const satellite = new THREE.Mesh(satGeom, satMat);
+    scene.add(satellite);
+    
+    let angle = 0;
+    
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // Rotate globe
+        globe.rotation.y += 0.006;
+        globe.rotation.x += 0.002;
+        
+        // Orbit satellite
+        angle += 0.025;
+        satellite.position.x = Math.cos(angle) * 7.6;
+        satellite.position.z = Math.sin(angle) * 7.6;
+        satellite.position.y = Math.sin(angle * 0.5) * 3;
+        
+        renderer.render(scene, camera);
+    }
+    
+    animate();
+    
+    // Mouse hover tilt parallax
+    window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) - 0.5;
+        const y = (e.clientY / window.innerHeight) - 0.5;
+        globe.rotation.y += x * 0.03;
+        globe.rotation.x += y * 0.03;
+    });
+</script>
+"""
 
 # Page configuration and title (SEO best practice)
 st.set_page_config(
@@ -554,14 +621,83 @@ st.markdown(
         color: #1A2540 !important;
         line-height: 1.4 !important;
     }
+
+    /* Tactile 3D Button styles and scan shimmer */
+    div.stButton > button {
+        background: linear-gradient(135deg, #3B6FE8 0%, #2563EB 100%) !important;
+        border: none !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 0 #1D4ED8, 0 8px 16px rgba(37, 99, 235, 0.2) !important;
+        transition: all 0.1s ease !important;
+        position: relative;
+        overflow: hidden;
+        width: 100% !important;
+    }
+    div.stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 0 #1D4ED8, 0 12px 20px rgba(37, 99, 235, 0.25) !important;
+    }
+    div.stButton > button:active {
+        transform: translateY(4px) !important;
+        box-shadow: 0 0px 0 #1D4ED8, 0 2px 4px rgba(37, 99, 235, 0.1) !important;
+    }
+    div.stButton > button::after {
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important; left: -100% !important;
+        width: 50% !important; height: 100% !important;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent) !important;
+        transform: skewX(-20deg) !important;
+        animation: btnShimmer 3s infinite linear !important;
+    }
+    @keyframes btnShimmer {
+        0% { left: -100%; }
+        100% { left: 150%; }
+    }
+
+    /* Marching ants uploader animation */
+    @keyframes marchingAnts {
+        0% { border-color: #C7D4F5; box-shadow: 0 0 0 rgba(59, 91, 255, 0); }
+        50% { border-color: #3B6FE8; box-shadow: 0 0 12px rgba(59, 91, 255, 0.12); }
+        100% { border-color: #C7D4F5; box-shadow: 0 0 0 rgba(59, 91, 255, 0); }
+    }
+    div[data-testid="stFileUploader"] {
+        animation: marchingAnts 3.5s infinite ease-in-out !important;
+    }
+
+    /* Live status dot animation */
+    .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+    .status-dot.idle {
+        background-color: #94A3B8;
+        box-shadow: 0 0 8px #94A3B8;
+    }
+    .status-dot.complete {
+        background-color: #10B981;
+        box-shadow: 0 0 8px #10B981;
+        animation: statusBlink 1.5s infinite ease-in-out;
+    }
+
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Header Section
-st.title("🛰️ Satellite Infrared-to-Optical Image Translation")
-st.write("Production-ready, air-gapped neural translation engine utilizing dual-stream edge-and-semantic fusion networks.")
+# Header Section with Three.js 3D Globe
+header_col1, header_col2 = st.columns([3, 1])
+with header_col1:
+    st.title("🛰️ Satellite Infrared-to-Optical Image Translation")
+    st.write("Production-ready, air-gapped neural translation engine utilizing dual-stream edge-and-semantic fusion networks.")
+with header_col2:
+    components.html(GLOBE_HTML, height=160, scrolling=False)
 
 # if not TORCH_AVAILABLE:
 #     st.warning(
