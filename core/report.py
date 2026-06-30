@@ -9,6 +9,42 @@ import datetime
 from fpdf import FPDF
 
 
+def clean_text(text: str) -> str:
+    """
+    Sanitize input text to prevent FPDF font encoding crashes.
+    Strips emojis and maps common unicode characters to latin-1 equivalents.
+    """
+    if not isinstance(text, str):
+        return str(text)
+    
+    # Map common emojis and symbols to safe ASCII/Latin-1 text
+    replacements = {
+        "⚠️": "[!]",
+        "🔴": "[CRITICAL]",
+        "🟢": "[LOW]",
+        "🟡": "[MEDIUM]",
+        "🟠": "[HIGH]",
+        "🛡️": "[SECURE]",
+        "🛰️": "[SAT]",
+        "🔍": "[DET]",
+        "°C": " deg C",
+        "°F": " deg F",
+        "°": " deg ",
+        "–": "-",
+        "—": "-",
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'"
+    }
+    
+    for orig, rep in replacements.items():
+        text = text.replace(orig, rep)
+        
+    # Fallback: replace any remaining non-latin-1 characters with a question mark
+    return text.encode('latin-1', 'replace').decode('latin-1')
+
+
 class RiskReportPDF(FPDF):
     """Custom FPDF layout for AI Thermal Risk Assessment Reports."""
 
@@ -84,13 +120,13 @@ def generate_pdf_report(data: dict) -> bytes:
     pdf.set_font("helvetica", "B", 10)
     pdf.cell(40, 6, "Target Image:")
     pdf.set_font("helvetica", "", 10)
-    pdf.cell(0, 6, str(data.get("image_name", "N/A")), ln=True)
+    pdf.cell(0, 6, clean_text(str(data.get("image_name", "N/A"))), ln=True)
 
     pdf.set_x(20)
     pdf.set_font("helvetica", "B", 10)
     pdf.cell(40, 6, "Analysis Timestamp:")
     pdf.set_font("helvetica", "", 10)
-    pdf.cell(0, 6, str(data.get("timestamp", "N/A")), ln=True)
+    pdf.cell(0, 6, clean_text(str(data.get("timestamp", "N/A"))), ln=True)
 
     pdf.set_x(20)
     pdf.set_font("helvetica", "B", 10)
@@ -169,7 +205,7 @@ def generate_pdf_report(data: dict) -> bytes:
     else:
         for point in analysis_points:
             pdf.cell(6, 6, ">>")
-            pdf.multi_cell(0, 6, point)
+            pdf.multi_cell(0, 6, clean_text(point))
             pdf.set_x(15)
 
     # Section 4: Event Classification & Risk Factors
@@ -192,7 +228,7 @@ def generate_pdf_report(data: dict) -> bytes:
     c_g = int(hex_color[2:4], 16)
     c_b = int(hex_color[4:6], 16)
     pdf.set_text_color(c_r, c_g, c_b)
-    pdf.cell(0, 6, class_data["name"].upper(), ln=True)
+    pdf.cell(0, 6, clean_text(class_data["name"].upper()), ln=True)
 
     # Risk Factors
     pdf.set_x(15)
@@ -205,7 +241,7 @@ def generate_pdf_report(data: dict) -> bytes:
     if not factors:
         pdf.cell(0, 6, "None", ln=True)
     else:
-        pdf.cell(0, 6, ", ".join(factors), ln=True)
+        pdf.cell(0, 6, clean_text(", ".join(factors)), ln=True)
 
     # Section 5: Recommendations
     pdf.ln(8)
@@ -227,7 +263,7 @@ def generate_pdf_report(data: dict) -> bytes:
     pdf.set_x(18)
     pdf.set_font("helvetica", "", 10)
     pdf.set_text_color(36, 41, 47)
-    pdf.cell(0, 5, str(data.get("recommendation", "Monitor area according to standard protocols.")))
+    pdf.cell(0, 5, clean_text(str(data.get("recommendation", "Monitor area according to standard protocols."))))
 
     # Return PDF bytes
     return bytes(pdf.output())
