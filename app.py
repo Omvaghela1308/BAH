@@ -215,138 +215,62 @@ if "risk_stats" not in st.session_state:
     st.session_state["risk_stats"] = None
 
 
-# Inject Custom Premium Dark Theme CSS Stylesheet (air-gapped compatible)
+# Inject Custom Premium Light Theme CSS Stylesheet (air-gapped compatible)
 st.markdown(
     """
-    <!-- Viewport definition for mobile scaling -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap');
 
-    /* Main app layout override */
+    /* Global styles override */
     .stApp {
-        background-color: #F4F7FC !important;
-        color: #1A2540 !important;
+        background: #F4F7FC !important;
+        color: #1E293B !important;
         font-family: 'Space Grotesk', sans-serif !important;
     }
 
-    /* Target all texts in stApp to ensure maximum contrast and design system fonts */
-    .stApp p, .stApp span, .stApp label, .stApp th, .stApp td, .stApp li {
-        color: #3D4F6E !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-    }
-
-    /* Labels, values, and code elements use IBM Plex Mono */
-    .stApp code, .stApp pre, .telemetry-val, .badge, .mono-text, .stSlider div, .stSelectbox div, .telemetry-value {
-        font-family: 'IBM Plex Mono', monospace !important;
-    }
-
-    /* Headers */
+    /* Headers and Titles */
     h1, h2, h3, h4, h5, h6 {
         color: #1A2540 !important;
-        font-family: 'Space Grotesk', sans-serif !important;
+        font-family: 'Orbitron', sans-serif !important;
         font-weight: 700 !important;
+        letter-spacing: 0.05em !important;
     }
 
-    /* Custom Sticky Topbar */
-    .custom-topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #FFFFFF;
-        border-bottom: 1px solid #DDE4EF;
-        height: 56px;
-        padding: 0 24px;
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        margin-bottom: 24px;
-        margin-top: -60px; /* offset streamlit margin */
-    }
-    .topbar-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .icon-box {
-        width: 34px;
-        height: 34px;
-        background-color: #EEF3FF;
-        border: 1px solid #C7D4F5;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-    }
-    .title-container {
-        display: flex;
-        flex-direction: column;
-    }
-    .app-title {
+    /* Paragraphs and general text elements */
+    .stApp p, .stApp label, .stApp th, .stApp td, .stApp li {
+        color: #475569 !important;
         font-family: 'Space Grotesk', sans-serif !important;
-        font-size: 14px;
-        font-weight: 700;
-        color: #1A2540 !important;
-        line-height: 1.2;
-    }
-    .app-subtitle {
-        font-family: 'IBM Plex Mono', monospace !important;
-        font-size: 10px;
-        font-weight: 500;
-        color: #8A96B0 !important;
-        line-height: 1.2;
-    }
-    .topbar-right {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-    .status-badge {
-        font-family: 'IBM Plex Mono', monospace !important;
-        font-size: 10px;
-        font-weight: 600;
-        text-transform: uppercase;
-        border-radius: 20px;
-        padding: 4px 10px;
-        line-height: 1.2;
-    }
-    .status-badge.online {
-        background-color: #EDFAF4;
-        border: 1px solid #7DDCAC;
-        color: #1A7A4A !important;
-    }
-    .status-badge.model-badge {
-        background-color: #EEF3FF;
-        border: 1px solid #C7D4F5;
-        color: #3B6FE8 !important;
     }
 
-    /* Container blocks for cards and components with premium 3D depth and shadows */
+    /* Mono text elements */
+    .stApp code, .stApp pre, .telemetry-value, .badge, .mono-text, .stSlider div, .stSelectbox div {
+        font-family: 'IBM Plex Mono', monospace !important;
+    }
+
+    /* Glassmorphic Columns (Cleanroom Light Mode) */
     div[data-testid="column"] {
-        background-color: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
-        padding: 24px 20px !important;
+        background: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid rgba(59, 111, 232, 0.12) !important;
+        padding: 24px 22px !important;
         border-radius: 16px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255,255,255,0.6) !important;
-        margin-bottom: 1.0rem !important;
-        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        box-shadow: 0 10px 30px rgba(59, 111, 232, 0.03) !important;
+        margin-bottom: 1.2rem !important;
+        transition: transform 0.3s ease, border-color 0.3s !important;
     }
     div[data-testid="column"]:hover {
-        transform: translateY(-4px) !important;
-        box-shadow: 0 15px 35px rgba(59, 111, 232, 0.08), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+        transform: translateY(-2px) !important;
+        border-color: rgba(59, 111, 232, 0.35) !important;
     }
 
-    /* Section Labels Style */
+    /* Section Labels */
     .section-label {
-        font-family: 'IBM Plex Mono', monospace !important;
-        font-size: 10px !important;
+        font-family: 'Orbitron', sans-serif !important;
+        font-size: 11px !important;
         font-weight: 600 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.12em !important;
+        letter-spacing: 0.15em !important;
         color: #3B6FE8 !important;
-        margin-bottom: 16px !important;
+        margin-bottom: 20px !important;
         display: flex;
         align-items: center;
         width: 100%;
@@ -355,84 +279,22 @@ st.markdown(
         content: "";
         flex-grow: 1;
         height: 1px;
-        background: linear-gradient(to right, #C7D4F5, transparent);
-        margin-left: 10px;
+        background: linear-gradient(to right, rgba(59, 111, 232, 0.2), transparent);
+        margin-left: 12px;
     }
 
-    /* Upload zone card */
+    /* Drag & Drop File Uploader Redesign */
     div[data-testid="stFileUploader"] {
-        border: 1.5px dashed #C7D4F5 !important;
-        border-radius: 10px !important;
-        background-color: #F8FAFF !important;
-        padding: 20px !important;
+        border: 1.5px dashed rgba(59, 111, 232, 0.2) !important;
+        border-radius: 12px !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        padding: 40px 24px !important;
         text-align: center !important;
         transition: all 0.3s ease !important;
     }
     div[data-testid="stFileUploader"]:hover {
         border-color: #3B6FE8 !important;
-        background-color: #EEF3FF !important;
-    }
-    div[data-testid="stFileUploader"] p, div[data-testid="stFileUploader"] span, div[data-testid="stFileUploader"] small {
-        color: #3D4F6E !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-    }
-
-    /* Primary Run Button */
-    button[kind="primary"] {
-        background-color: #3B6FE8 !important;
-        color: #ffffff !important;
-        border: 1px solid #3B6FE8 !important;
-        border-radius: 8px !important;
-        font-weight: 700 !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-        text-transform: uppercase !important;
-        width: 100% !important;
-        padding: 12px !important;
-        transition: all 0.2s ease !important;
-    }
-    
-    button[kind="primary"] p {
-        color: #ffffff !important;
-        font-weight: 700 !important;
-    }
-
-    button[kind="primary"]:hover {
-        background-color: #2D5BD0 !important;
-        border-color: #2D5BD0 !important;
-        transform: scale(0.99) !important;
-        box-shadow: none !important;
-    }
-
-    /* Secondary Buttons */
-    button[data-testid="stBaseButton-secondary"] {
-        background-color: #3B6FE8 !important;
-        color: #ffffff !important;
-        border: 1px solid #3B6FE8 !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-        transition: all 0.2s ease !important;
-    }
-    button[data-testid="stBaseButton-secondary"] p {
-        color: #ffffff !important;
-    }
-    button[data-testid="stBaseButton-secondary"]:hover {
-        background-color: #2D5BD0 !important;
-        border-color: #2D5BD0 !important;
-    }
-
-    /* Hide the upload button inside the file uploader */
-    div[data-testid="stFileUploader"] button {
-        display: none !important;
-    }
-
-    /* Show the upload instructions text (like "Drag and drop file here") */
-    div[data-testid="stFileUploader"] section > div {
-        display: block !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-        color: #3D4F6E !important;
-        text-align: center !important;
-        margin-top: 10px !important;
+        background-color: rgba(59, 111, 232, 0.02) !important;
     }
 
     /* Hide native file input element completely to prevent browser default text from showing up */
@@ -444,115 +306,161 @@ st.markdown(
         position: absolute !important;
     }
 
-    /* Hide SVG icon and any title/desc inside uploader button to prevent duplicate text */
-    div[data-testid="stFileUploader"] button svg {
+    /* Hide the browse button in Streamlit file uploader completely */
+    div[data-testid="stFileUploader"] button,
+    div[data-testid="stFileUploader"] [data-testid="stBaseButton-secondary"] {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
-    /* Inputs & Dropdowns */
+    /* Primary Run Button Redesign */
+    button[kind="primary"] {
+        background: linear-gradient(135deg, #3B6FE8 0%, #1A2540 100%) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-family: 'Orbitron', sans-serif !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.1em;
+        width: 100% !important;
+        padding: 14px !important;
+        box-shadow: 0 4px 15px rgba(59, 111, 232, 0.2) !important;
+        transition: all 0.2s ease !important;
+    }
+    button[kind="primary"] p {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+    button[kind="primary"]:hover {
+        transform: scale(0.99) !important;
+        box-shadow: 0 4px 20px rgba(59, 111, 232, 0.35) !important;
+    }
+
+    /* Secondary Buttons Styling */
+    button[data-testid="stBaseButton-secondary"] {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: #3B6FE8 !important;
+        border: 1px solid rgba(59, 111, 232, 0.2) !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        transition: all 0.2s ease !important;
+    }
+    button[data-testid="stBaseButton-secondary"] p {
+        color: #3B6FE8 !important;
+    }
+    button[data-testid="stBaseButton-secondary"]:hover {
+        background-color: rgba(59, 111, 232, 0.05) !important;
+        border-color: #3B6FE8 !important;
+    }
+
+    /* Dropdowns & Selects Styling */
     .stSelectbox div[data-baseweb="select"] {
-        background-color: #F8FAFF !important;
-        border: 1px solid #DDE4EF !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(59, 111, 232, 0.2) !important;
         color: #1A2540 !important;
         border-radius: 8px !important;
         font-family: 'IBM Plex Mono', monospace !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
     }
 
-    /* live value badge */
+    /* Value Badges */
     .val-badge {
         font-family: 'IBM Plex Mono', monospace !important;
         font-size: 11px !important;
-        background-color: #EEF3FF !important;
-        border: 1px solid #C7D4F5 !important;
+        background-color: rgba(59, 111, 232, 0.06) !important;
+        border: 1px solid rgba(59, 111, 232, 0.2) !important;
         color: #3B6FE8 !important;
         border-radius: 4px !important;
         padding: 2px 8px !important;
         font-weight: 500 !important;
     }
 
-    /* Sliders styling */
+    /* Sliders Override */
     .stSlider [data-testid="stWidgetLabel"] p {
-        color: #3D4F6E !important;
-        font-size: 12px !important;
+        color: #1A2540 !important;
+        font-size: 13px !important;
         font-weight: 500 !important;
     }
 
-    /* Metadata table */
+    /* Tables Styling */
     table {
         width: 100% !important;
         border-collapse: collapse !important;
-        margin: 1rem 0 !important;
+        margin: 1.2rem 0 !important;
+        background: rgba(255, 255, 255, 0.9) !important;
     }
-    
     th, td {
-        border: 1px solid #DDE4EF !important;
+        border: 1px solid rgba(59, 111, 232, 0.1) !important;
         padding: 12px !important;
         text-align: left !important;
-        background-color: #FFFFFF !important;
-        color: #1A2540 !important;
+        color: #475569 !important;
     }
-
     th {
         color: #3B6FE8 !important;
+        font-family: 'Orbitron', sans-serif !important;
         font-weight: 600 !important;
-        background-color: #F8FAFF !important;
+        background-color: rgba(59, 111, 232, 0.04) !important;
+        font-size: 11px;
+        letter-spacing: 0.05em;
     }
 
-    /* Hide standard streamlit watermarks and deploy button */
     #MainMenu, footer, header, div.stDeployButton {
         visibility: hidden !important;
         display: none !important;
     }
 
-    /* Visual Output Grid & Bracket styles */
+    /* Visual Output Grid & Brackets styling */
     .preview-box {
         position: relative !important;
-        background-color: #FFFFFF !important;
-        border: 1px solid #DDE4EF !important;
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid rgba(59, 111, 232, 0.12) !important;
         border-radius: 12px !important;
         padding: 20px !important;
         min-height: 280px !important;
-        /* Grid overlay background */
-        background-size: 28px 28px !important;
-        background-image: linear-gradient(to right, rgba(238, 243, 255, 0.6) 1px, transparent 1px),
-                          linear-gradient(to bottom, rgba(238, 243, 255, 0.6) 1px, transparent 1px) !important;
+        background-size: 20px 20px !important;
+        background-image: linear-gradient(to right, rgba(59, 111, 232, 0.02) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(59, 111, 232, 0.02) 1px, transparent 1px) !important;
     }
-
-    /* Corner brackets */
-    .preview-box::before, .preview-box::after, .bracket-left, .bracket-right {
+    .preview-box::before, .preview-box::after {
         content: "";
         position: absolute;
         width: 16px;
         height: 16px;
         border-color: #3B6FE8;
         border-style: solid;
-        opacity: 0.35;
+        opacity: 0.3;
         pointer-events: none;
     }
-    .preview-box::before { /* top-left */
+    .preview-box::before {
         top: 10px;
         left: 10px;
-        border-width: 1.5px 0 0 1.5px;
+        border-width: 2px 0 0 2px;
     }
-    .preview-box::after { /* top-right */
+    .preview-box::after {
         top: 10px;
         right: 10px;
-        border-width: 1.5px 1.5px 0 0;
+        border-width: 2px 2px 0 0;
     }
 
     /* Telemetry Metadata Card Grid */
     .telemetry-grid {
         display: grid !important;
-        grid-template-columns: repeat(3, 2fr) !important;
-        gap: 8px !important;
-        margin-top: 16px !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+        margin-top: 20px !important;
     }
     .telemetry-card {
-        background-color: #FFFFFF !important;
-        border: 1px solid #DDE4EF !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(59, 111, 232, 0.12) !important;
         border-radius: 8px !important;
-        padding: 10px 12px !important;
+        padding: 12px !important;
         display: flex !important;
         flex-direction: column !important;
     }
@@ -560,111 +468,18 @@ st.markdown(
         font-family: 'IBM Plex Mono', monospace !important;
         font-size: 9px !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.15em !important;
-        color: #A0ADCA !important;
+        letter-spacing: 0.12em !important;
+        color: #64748B !important;
         margin-bottom: 4px !important;
     }
     .telemetry-value {
         font-family: 'IBM Plex Mono', monospace !important;
         font-size: 13px !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         color: #1A2540 !important;
     }
     .telemetry-value.accent {
         color: #3B6FE8 !important;
-    }
-
-    /* AI Thermal Risk Assessment Styles */
-    .risk-card {
-        background: #ffffff !important;
-        border: 1px solid #DDE4EF !important;
-        border-radius: 12px !important;
-        padding: 24px !important;
-        margin-top: 20px !important;
-        box-shadow: none !important;
-    }
-
-    .risk-header {
-        font-size: 1.5rem !important;
-        color: #1A2540 !important;
-        margin-bottom: 20px !important;
-        border-bottom: 1px solid #DDE4EF !important;
-        padding-bottom: 10px !important;
-        font-weight: 600 !important;
-    }
-
-    .risk-grid {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr 1fr !important;
-        gap: 24px !important;
-    }
-
-    /* Recommendation Box */
-    .recommendation-card {
-        background: #EDFAF4 !important;
-        border-left: 4px solid #7DDCAC !important;
-        padding: 12px 16px !important;
-        border-radius: 0 8px 8px 0 !important;
-        margin-top: 15px !important;
-    }
-
-    .recommendation-title {
-        font-size: 0.85rem !important;
-        color: #1A7A4A !important;
-        font-weight: 600 !important;
-        text-transform: uppercase !important;
-        margin-bottom: 4px !important;
-    }
-
-    .recommendation-text {
-        font-size: 0.9rem !important;
-        color: #1A2540 !important;
-        line-height: 1.4 !important;
-    }
-
-    /* Tactile 3D Button styles and scan shimmer */
-    div.stButton > button {
-        background: linear-gradient(135deg, #3B6FE8 0%, #2563EB 100%) !important;
-        border: none !important;
-        color: #FFFFFF !important;
-        font-weight: 600 !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 0 #1D4ED8, 0 8px 16px rgba(37, 99, 235, 0.2) !important;
-        transition: all 0.1s ease !important;
-        position: relative;
-        overflow: hidden;
-        width: 100% !important;
-    }
-    div.stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 0 #1D4ED8, 0 12px 20px rgba(37, 99, 235, 0.25) !important;
-    }
-    div.stButton > button:active {
-        transform: translateY(4px) !important;
-        box-shadow: 0 0px 0 #1D4ED8, 0 2px 4px rgba(37, 99, 235, 0.1) !important;
-    }
-    div.stButton > button::after {
-        content: "" !important;
-        position: absolute !important;
-        top: 0 !important; left: -100% !important;
-        width: 50% !important; height: 100% !important;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent) !important;
-        transform: skewX(-20deg) !important;
-        animation: btnShimmer 3s infinite linear !important;
-    }
-    @keyframes btnShimmer {
-        0% { left: -100%; }
-        100% { left: 150%; }
-    }
-
-    /* Marching ants uploader animation */
-    @keyframes marchingAnts {
-        0% { border-color: #C7D4F5; box-shadow: 0 0 0 rgba(59, 91, 255, 0); }
-        50% { border-color: #3B6FE8; box-shadow: 0 0 12px rgba(59, 91, 255, 0.12); }
-        100% { border-color: #C7D4F5; box-shadow: 0 0 0 rgba(59, 91, 255, 0); }
-    }
-    div[data-testid="stFileUploader"] {
-        animation: marchingAnts 3.5s infinite ease-in-out !important;
     }
 
     /* Live status dot animation */
@@ -678,24 +493,45 @@ st.markdown(
     }
     .status-dot.idle {
         background-color: #94A3B8;
-        box-shadow: 0 0 8px #94A3B8;
     }
     .status-dot.complete {
         background-color: #10B981;
-        box-shadow: 0 0 8px #10B981;
         animation: statusBlink 1.5s infinite ease-in-out;
     }
 
+    @keyframes statusBlink {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+
 # Header Section with Three.js 3D Globe
 header_col1, header_col2 = st.columns([3, 1])
 with header_col1:
-    st.title("🛰️ Satellite Infrared-to-Optical Image Translation")
-    st.write("Production-ready, air-gapped neural translation engine utilizing dual-stream edge-and-semantic fusion networks.")
+    st.markdown(
+        """
+        <div style="margin-top: -20px; margin-bottom: 20px;">
+            <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 2.2rem; color: #1A2540; font-weight: 900; letter-spacing: 0.05em;">
+                🛰️ SATELLITE COMMAND CONTROL
+            </h1>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; color: #3B6FE8; margin-top: 6px; letter-spacing: 0.05em; font-weight: 600;">
+                IR-TO-RGB NEURAL TRANSLATION SYSTEM // SECURE EARTH OBSERVATION
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <span class="status-badge" style="background: rgba(59, 111, 232, 0.06); border: 1px solid rgba(59, 111, 232, 0.25); color: #3B6FE8;">🛰️ AIR-GAPPED</span>
+                <span class="status-badge" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); color: #10B981;">⚡ AI READY</span>
+                <span class="status-badge" style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.25); color: #F59E0B;">🔒 OFFLINE</span>
+                <span class="status-badge" style="background: rgba(139, 92, 246, 0.06); border: 1px solid rgba(139, 92, 246, 0.25); color: #8B5CF6;">🌍 SATELLITE MODE</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 with header_col2:
     components.html(GLOBE_HTML, height=160, scrolling=False)
 
@@ -793,9 +629,9 @@ with col_left:
 
     # Add Target Output Resolution dropdown
     st.markdown(
-        f'<div style="margin-top:16px; margin-bottom: 4px;">'
-        f'<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Target Output Resolution</span>'
-        f'</div>',
+        '<div style="margin-top:16px; margin-bottom: 4px;">'
+        '<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Target Output Resolution</span>'
+        '</div>',
         unsafe_allow_html=True
     )
     target_res_label = st.selectbox(
@@ -816,9 +652,9 @@ with col_left:
 
     # Add Spectral Fusion Mode dropdown
     st.markdown(
-        f'<div style="margin-top:16px; margin-bottom: 4px;">'
-        f'<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Spectral Fusion Mode</span>'
-        f'</div>',
+        '<div style="margin-top:16px; margin-bottom: 4px;">'
+        '<span style="font-size:12px; font-weight:500; color:#3D4F6E;">Spectral Fusion Mode</span>'
+        '</div>',
         unsafe_allow_html=True
     )
     fusion_mode = st.selectbox(
@@ -838,20 +674,22 @@ with col_left:
                 # Open uploaded image
                 uploaded_pil = Image.open(uploaded_file)
 
-                # Wrap forward pass in spinner and exception safety block
-                with st.spinner("Running deep neural translation..."):
-                    # Stage 1: Colorization (Model Inference)
+                # Wrap forward pass in aerospace command status block
+                with st.status("🛰️ INITIATING SATELLITE IMAGE TRANSLATION ENGINE...", expanded=True) as status_box:
+                    status_box.write("🔄 Preprocessing grayscale Infrared raw sensor data...")
                     t_start_color = time.perf_counter()
                     tensor = preprocess(uploaded_pil)
+                    
+                    status_box.write("🧠 Executing DSF-NET translation forward pass...")
                     raw_out = run_inference(model, tensor)
                     t_color = (time.perf_counter() - t_start_color) * 1000  # ms
 
-                    # Stage 2: Enhancement (CLAHE and Semantic Colorization)
+                    status_box.write("🎛️ Enhancing structural clarity and contrast with CLAHE algorithm...")
                     t_start_enh = time.perf_counter()
                     enhanced = apply_clahe(raw_out, clip_limit=edge_clarity)
                     t_enh = (time.perf_counter() - t_start_enh) * 1000  # ms
 
-                    # Stage 3: Super-Resolution (Lightweight ESRGAN upscaler)
+                    status_box.write("⚡ Running ESRGAN super-resolution upscaler...")
                     t_start_sr = time.perf_counter()
                     from core.super_res import super_resolve
                     sr_out = super_resolve(enhanced, esrgan_model)
@@ -868,6 +706,7 @@ with col_left:
                     st.session_state["output_img"] = enhanced
                     st.session_state["sr_img"] = sr_out
 
+                    status_box.write("🔮 Segmenting land cover regions and generating overlays...")
                     # Generate Semantic Land Cover Mask for visualization
                     from core.segmentation import segment_land_cover, color_code_mask
                     ir_np = np.array(uploaded_pil)
@@ -937,7 +776,9 @@ with col_left:
 
                     # Run downstream object detection to get count for risk assessment
                     from core.detector import detect_objects
-                    _, count_rgb = detect_objects(sr_out, is_rgb=True)
+                    _, count_rgb, obj_details = detect_objects(sr_out, is_rgb=True, mask=mask, return_details=True)
+                    st.session_state["objects_detected_count"] = count_rgb
+                    st.session_state["detected_objects_details"] = obj_details
 
                     # Assess Thermal Risk dynamically with heatmap and statistics
                     from core.risk_assessment import assess_thermal_risk
@@ -962,6 +803,7 @@ with col_left:
                         output_img_array=enhanced,
                     )
                     st.session_state["saved_path"] = saved_path
+                    status_box.update(label="🛰️ SYSTEM NEURAL TRANSLATION ONLINE & LOADED", state="complete")
 
             except Exception as e:
                 st.error(f"Translation Engine Error: {str(e)}")
@@ -991,6 +833,7 @@ with col_right:
             
             ir_b64 = to_b64(input_gray_pil)
             rgb_b64 = to_b64(sr_pil)
+            mask_b64 = to_b64(mask_pil)
 
             st.markdown(
                 f"""
@@ -1010,6 +853,99 @@ with col_right:
                 unsafe_allow_html=True
             )
 
+            # 3D Digital Elevation & Thermal Model Preview
+            st.markdown('<div style="margin-top: 16px;"></div>', unsafe_allow_html=True)
+            with st.expander("🛰️ 3D DIGITAL SURFACE & THERMAL MODEL PREVIEW", expanded=True):
+                components.html(
+                    """
+                    <div id="threejs-terrain-container" style="width:100%; height:450px; background:#f4f7fc; border-radius:12px; overflow:hidden; position:relative; border:1px solid rgba(59,111,232,0.15);">
+                        <div style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.9); color:#3B6FE8; font-family:'Orbitron',sans-serif; font-size:10px; padding:6px 12px; border-radius:6px; border:1px solid rgba(59,111,232,0.3); z-index:10; letter-spacing:0.1em; pointer-events:none; font-weight:700; box-shadow: 0 4px 12px rgba(59,111,232,0.06);">
+                            3D TACTICAL SURFACE MODEL (INTERACTIVE)
+                        </div>
+                        <div id="threejs-canvas-holder" style="width:100%; height:100%;"></div>
+                    </div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+                    <script>
+                        const holder = document.getElementById('threejs-canvas-holder');
+                        
+                        const scene = new THREE.Scene();
+                        scene.background = new THREE.Color(0xf4f7fc);
+                        
+                        const camera = new THREE.PerspectiveCamera(45, holder.clientWidth / holder.clientHeight, 0.1, 1000);
+                        camera.position.set(0, 80, 140);
+                        
+                        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                        renderer.setSize(holder.clientWidth, holder.clientHeight);
+                        renderer.setPixelRatio(window.devicePixelRatio);
+                        holder.appendChild(renderer.domElement);
+                        
+                        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                        controls.enableDamping = true;
+                        controls.dampingFactor = 0.05;
+                        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+                        
+                        const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+                        scene.add(ambientLight);
+                        
+                        const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.75);
+                        dirLight1.position.set(40, 100, 40);
+                        scene.add(dirLight1);
+
+                        const dirLight2 = new THREE.DirectionalLight(0x3B6FE8, 0.35);
+                        dirLight2.position.set(-40, 100, -40);
+                        scene.add(dirLight2);
+                        
+                        const textureLoader = new THREE.TextureLoader();
+                        const colorTex = textureLoader.load('data:image/png;base64,__RGB_B64__');
+                        const dispTex = textureLoader.load('data:image/png;base64,__IR_B64__');
+                        
+                        colorTex.minFilter = THREE.LinearFilter;
+                        dispTex.minFilter = THREE.LinearFilter;
+
+                        const geometry = new THREE.PlaneGeometry(120, 120, 128, 128);
+                        const material = new THREE.MeshStandardMaterial({
+                            map: colorTex,
+                            displacementMap: dispTex,
+                            displacementScale: 14,
+                            roughness: 0.55,
+                            metalness: 0.1
+                        });
+                        
+                        const terrain = new THREE.Mesh(geometry, material);
+                        terrain.rotation.x = -Math.PI / 2;
+                        scene.add(terrain);
+                        
+                        const wireMaterial = new THREE.MeshBasicMaterial({
+                            color: 0x3B6FE8,
+                            wireframe: true,
+                            transparent: true,
+                            opacity: 0.15
+                        });
+                        const wireTerrain = new THREE.Mesh(geometry, wireMaterial);
+                        wireTerrain.rotation.x = -Math.PI / 2;
+                        wireTerrain.position.y = -0.5;
+                        scene.add(wireTerrain);
+                        
+                        function animate() {
+                            requestAnimationFrame(animate);
+                            controls.update();
+                            renderer.render(scene, camera);
+                        }
+                        
+                        animate();
+                        
+                        window.addEventListener('resize', () => {
+                            camera.aspect = holder.clientWidth / holder.clientHeight;
+                            camera.updateProjectionMatrix();
+                            renderer.setSize(holder.clientWidth, holder.clientHeight);
+                        });
+                    </script>
+                    """.replace("__RGB_B64__", mask_b64).replace("__IR_B64__", ir_b64),
+                    height=470,
+                    scrolling=False
+                )
+
             # Rest of the features: download, additional masks, etc.
             st.markdown('<div style="margin-top: 16px;"></div>', unsafe_allow_html=True)
             col_d1, col_d2 = st.columns(2)
@@ -1023,7 +959,8 @@ with col_right:
                 from core.report import generate_pdf_report
                 import datetime
 
-                threat_level_upper = st.session_state["risk_level"].upper()
+                threat_level_val = st.session_state["risk_level"]
+                threat_level_upper = threat_level_val.upper() if threat_level_val is not None else "LOW"
                 if threat_level_upper == "CRITICAL":
                     risk_score = 90
                     classification_data = {"name": "Emergency", "color": "#f85149"}
@@ -1064,7 +1001,8 @@ with col_right:
                     "analysis_points": st.session_state["risk_reasons"],
                     "classification": classification_data,
                     "risk_factors": risk_factors,
-                    "recommendation": st.session_state["risk_recommendation"]
+                    "recommendation": st.session_state["risk_recommendation"],
+                    "object_details": st.session_state.get("detected_objects_details", {})
                 }
                 
                 try:
@@ -1196,7 +1134,7 @@ with col_right:
 # --- Downstream Task Demonstration Panel ---
 if st.session_state["output_img"] is not None and uploaded_file is not None:
     st.markdown("---")
-    st.markdown("<h2 style='color: #111827; font-family: Inter, sans-serif; font-weight: 600;'>🔍 Downstream Object Detection Comparison</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #FFFFFF; font-family: Orbitron, sans-serif; font-weight: 700; text-shadow: 0 0 10px rgba(0,242,254,0.3);'>🔍 Downstream Object Detection Comparison</h2>", unsafe_allow_html=True)
     
     try:
         from core.detector import detect_objects
@@ -1217,11 +1155,39 @@ if st.session_state["output_img"] is not None and uploaded_file is not None:
         with col_det_2:
             st.image(det_rgb, caption=f"RGB Detection View (Count: {count_rgb})", width=480)
             
-        # Metric showing quantitative improvement
-        st.metric(
-            label="Object Detection Improvement",
-            value=f"IR: {count_ir} Objects → RGB: {count_rgb} Objects",
-            delta=f"+{count_rgb - count_ir} objects detected (+{((count_rgb - count_ir) / max(1, count_ir) * 100):.1f}%)" if count_rgb >= count_ir else f"{count_rgb - count_ir} objects"
+        # Custom aerospace style metric panel
+        improvement_pct = f"+{((count_rgb - count_ir) / max(1, count_ir) * 100):.1f}%" if count_ir > 0 else "N/A"
+        delta_count = count_rgb - count_ir
+        st.markdown(
+            f"""
+            <div style="
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid rgba(59, 111, 232, 0.15);
+                border-radius: 12px;
+                padding: 20px;
+                font-family: 'Space Grotesk', sans-serif;
+                margin-top: 15px;
+                box-shadow: 0 8px 32px rgba(59, 111, 232, 0.04);
+            ">
+                <div style="font-family: 'Orbitron', sans-serif; font-size: 10px; text-transform: uppercase; color: #64748B; letter-spacing: 0.15em; font-weight: 600;">TACTICAL DETECTION ANALYSIS</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <div style="font-size: 11px; color: #64748B;">IR COUNTER</div>
+                        <div style="font-size: 22px; font-weight: 700; color: #475569; font-family: 'IBM Plex Mono', monospace;">{count_ir} <span style="font-size: 12px; font-weight: 500;">objects</span></div>
+                    </div>
+                    <div style="font-size: 24px; color: #3B6FE8;">➔</div>
+                    <div>
+                        <div style="font-size: 11px; color: #64748B;">RGB COUNTER</div>
+                        <div style="font-size: 22px; font-weight: 700; color: #3B6FE8; font-family: 'IBM Plex Mono', monospace;">{count_rgb} <span style="font-size: 12px; font-weight: 500;">objects</span></div>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 6px; padding: 6px 12px; text-align: right;">
+                        <div style="font-size: 9px; color: #10B981; font-family: 'Orbitron', sans-serif; font-weight: 600; letter-spacing: 0.05em;">AI DEVIATION DELTA</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #10B981; font-family: 'IBM Plex Mono', monospace;">+{delta_count} ({improvement_pct})</div>
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
         )
         
     except Exception as e:
@@ -1231,7 +1197,7 @@ if st.session_state["output_img"] is not None and uploaded_file is not None:
 # --- Thermal Risk Assessment Panel ---
 if st.session_state["output_img"] is not None and st.session_state["risk_level"] is not None:
     st.markdown("---")
-    st.markdown("<h2 style='color: #111827; font-family: Inter, sans-serif; font-weight: 600;'>🛡️ Thermal Risk Assessment</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #FFFFFF; font-family: Orbitron, sans-serif; font-weight: 700; text-shadow: 0 0 10px rgba(0,242,254,0.3);'>🛡️ Thermal Risk Assessment</h2>", unsafe_allow_html=True)
     
     level = st.session_state["risk_level"]
     reasons = st.session_state["risk_reasons"]
@@ -1254,81 +1220,82 @@ if st.session_state["output_img"] is not None and st.session_state["risk_level"]
     with col_rk2:
         # Map styled banners for light theme
         banners = {
-            "Critical": ("#fee2e2", "#991b1b", "🔴 CRITICAL RISK"),
-            "High": ("#fee2e2", "#991b1b", "🔴 HIGH RISK"),
-            "Medium": ("#fef3c7", "#92400e", "🟡 MEDIUM RISK"),
-            "Low": ("#d1fae5", "#065f46", "🟢 LOW RISK")
+            "Critical": ("rgba(239, 68, 68, 0.08)", "#ef4444", "🚨 CRITICAL RISK STATE DETECTED"),
+            "High": ("rgba(239, 68, 68, 0.08)", "#ef4444", "🔴 HIGH RISK STATE ACTIVE"),
+            "Medium": ("rgba(245, 158, 11, 0.08)", "#f59e0b", "⚠️ MEDIUM RISK STATE ANOMALY"),
+            "Low": ("rgba(16, 185, 129, 0.08)", "#10b981", "🛡️ SECURE OPERATION STATE")
         }
-        bg_col, fg_col, banner_text = banners.get(level, ("#ffffff", "#111827", f"{level.upper()} RISK"))
+        bg_col, fg_col, banner_text = banners.get(level, ("rgba(0, 0, 0, 0.05)", "#1A2540", f"{level.upper()} RISK STATE"))
         
-        reasons_html = "".join([f"<li style='margin-bottom: 8px; list-style-type: none; padding-left: 0; color: #475569; font-size: 0.9rem;'>{r}</li>" for r in reasons])
+        reasons_html = "".join([f"<li style='margin-bottom: 8px; list-style-type: square; color: #475569; font-size: 0.9rem;'>{r}</li>" for r in reasons])
         
         panel_html = f"""
         <div style="
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(59, 111, 232, 0.15);
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 40px rgba(59, 111, 232, 0.05);
+            font-family: 'Space Grotesk', sans-serif;
+            color: #1E293B;
         ">
             <!-- 1. Risk Level Banner -->
-            <div style="background-color: {bg_col}; color: {fg_col}; padding: 12px; border-radius: 6px; font-weight: 600; text-align: center; margin-bottom: 18px; font-size: 1.1rem; border: 1px solid #e5e7eb;">
+            <div style="background-color: {bg_col}; color: {fg_col}; padding: 12px; border-radius: 6px; font-weight: 700; font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em; text-align: center; margin-bottom: 18px; font-size: 1rem; border: 1px solid {fg_col}44;">
                 {banner_text}
             </div>
 
             <!-- 2. Dynamic Reasons -->
-            <div style="font-size: 1rem; margin-bottom: 6px; font-weight: 600; color: #111827;">Reason:</div>
-            <ul style="margin: 0 0 16px 0; padding-left: 0; list-style-type: none;">
+            <div style="font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; color: #1A2540; font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em;">ANOMALY ANALYSIS:</div>
+            <ul style="margin: 0 0 18px 0; padding-left: 20px;">
                 {reasons_html}
             </ul>
 
             <!-- 3. Recommendation Alert Box -->
             <div style="
-                background-color: #fef2f2;
+                background-color: rgba(239, 68, 68, 0.03);
                 border-left: 4px solid #ef4444;
                 padding: 12px 16px;
                 border-radius: 0 8px 8px 0;
                 margin-bottom: 20px;
             ">
-                <div style="font-weight: 600; color: #b91c1c; font-size: 0.95rem; margin-bottom: 4px;">
-                    RECOMMENDED ACTION:
+                <div style="font-weight: 700; color: #ef4444; font-size: 0.85rem; font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em; margin-bottom: 4px;">
+                    TACTICAL RECOMMENDATION:
                 </div>
-                <div style="color: #111827; font-size: 0.9rem; line-height: 1.4;">
+                <div style="color: #475569; font-size: 0.88rem; line-height: 1.4;">
                     {recommendation}
                 </div>
             </div>
 
             <!-- 4. Thermal Telemetry Table -->
-            <div style="font-size: 1rem; margin-bottom: 6px; font-weight: 600; color: #111827;">Thermal Telemetry:</div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <div style="font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; color: #1A2540; font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em;">THERMAL TELEMETRY DATA:</div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 5px;">
                 <tbody>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Peak Temperature</td>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #ef4444; font-weight: 600; background-color: #ffffff;">{peak_temp}</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #475569; background-color: rgba(255, 255, 255, 0.5) !important;">Peak Temperature</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #ef4444; font-weight: 700; background-color: rgba(255, 255, 255, 0.5) !important; font-family: 'IBM Plex Mono', monospace;">{peak_temp}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Hotspot Density</td>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #111827; background-color: #ffffff;">{density}</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #475569; background-color: rgba(255, 255, 255, 0.5) !important;">Hotspot Density</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #1A2540; background-color: rgba(255, 255, 255, 0.5) !important; font-family: 'IBM Plex Mono', monospace;">{density}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Vulnerable Proximity</td>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #2563eb; background-color: #ffffff;">{proximity}</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #475569; background-color: rgba(255, 255, 255, 0.5) !important;">Vulnerable Proximity</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #3B6FE8; background-color: rgba(255, 255, 255, 0.5) !important; font-family: 'IBM Plex Mono', monospace;">{proximity}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Anomaly Spread</td>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #111827; background-color: #ffffff;">{spread}</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #475569; background-color: rgba(255, 255, 255, 0.5) !important;">Anomaly Spread</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #1A2540; background-color: rgba(255, 255, 255, 0.5) !important; font-family: 'IBM Plex Mono', monospace;">{spread}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #6b7280; background-color: #ffffff;">Confidence Score</td>
-                        <td style="padding: 6px; border: 1px solid #e5e7eb; color: #10b981; font-weight: 600; background-color: #ffffff;">{confidence}</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #475569; background-color: rgba(255, 255, 255, 0.5) !important;">Confidence Score</td>
+                        <td style="padding: 8px; border: 1px solid rgba(59, 111, 232, 0.1); color: #10b981; font-weight: 700; background-color: rgba(255, 255, 255, 0.5) !important; font-family: 'IBM Plex Mono', monospace;">{confidence}</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- 5. Concise Engine Footer -->
-            <div style="font-size: 0.72rem; color: #6b7280; margin-top: 18px; text-align: center;">
-                Assessment generated by ThermalRisk Engine v1.0 — based on pixel-level IR anomaly analysis
+            <div style="font-size: 0.7rem; color: #64748B; margin-top: 18px; text-align: center; font-family: 'IBM Plex Mono', monospace;">
+                ASSESSMENT GENERATED BY THERMALRISK ENGINE V1.0 // SUB-PIXEL SENSOR ANALYSIS
             </div>
         </div>
         """

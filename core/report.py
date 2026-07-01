@@ -243,6 +243,48 @@ def generate_pdf_report(data: dict) -> bytes:
     else:
         pdf.cell(0, 6, clean_text(", ".join(factors)), ln=True)
 
+    # Object Details Breakdown Table
+    pdf.ln(4)
+    pdf.set_x(15)
+    pdf.set_font("helvetica", "B", 10)
+    pdf.set_text_color(36, 41, 47)
+    pdf.cell(0, 6, "Object Detection Class Breakdown:", ln=True)
+    pdf.ln(1)
+    
+    obj_details = data.get("object_details", {})
+    if not obj_details:
+        pdf.set_font("helvetica", "I", 9)
+        pdf.cell(0, 6, "No object breakdown data available.", ln=True)
+    else:
+        # Table Header
+        pdf.set_fill_color(240, 246, 252)
+        pdf.set_draw_color(208, 215, 222)
+        pdf.set_font("helvetica", "B", 9)
+        pdf.cell(90, 6, " Object Class / Category", border=1, fill=True)
+        pdf.cell(45, 6, " Count Detected", border=1, fill=True, align="C")
+        pdf.cell(45, 6, " Analysis State", border=1, fill=True, ln=True, align="C")
+        
+        # Table Body
+        pdf.set_font("helvetica", "", 9)
+        for obj_name, obj_count in obj_details.items():
+            pdf.set_x(15)
+            pdf.cell(90, 6, f" {obj_name}", border=1)
+            pdf.cell(45, 6, f" {obj_count}", border=1, align="C")
+            
+            # Map dynamic status text
+            if obj_count > 5:
+                status_text = "Elevated"
+                pdf.set_text_color(240, 136, 62)  # Orange
+            elif obj_count > 0:
+                status_text = "Detected"
+                pdf.set_text_color(46, 160, 67)   # Green
+            else:
+                status_text = "Nominal"
+                pdf.set_text_color(139, 148, 158) # Grey
+            
+            pdf.cell(45, 6, f" {status_text}", border=1, ln=True, align="C")
+            pdf.set_text_color(36, 41, 47)  # Reset dark text
+
     # Section 5: Recommendations
     pdf.ln(8)
     pdf.set_font("helvetica", "B", 12)

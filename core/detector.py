@@ -10,17 +10,18 @@ import cv2
 import numpy as np
 
 
-def detect_objects(image: np.ndarray, is_rgb: bool = True) -> tuple[np.ndarray, int]:
+def detect_objects(image: np.ndarray, is_rgb: bool = True, mask: np.ndarray = None, return_details: bool = False) -> tuple:
     """
     Detect structural features and objects using contour and boundary analysis.
 
     Args:
-        image (np.ndarray): Input image array. For RGB, shape is [H, W, 3];
-                            for IR, shape can be [H, W] or [H, W, 3].
+        image (np.ndarray): Input image array.
         is_rgb (bool): True if the input is an RGB image, False if grayscale IR.
+        mask (np.ndarray): Semantic segmentation mask to identify categories.
+        return_details (bool): Whether to return a breakdown dictionary of classified objects.
 
     Returns:
-        tuple[np.ndarray, int]: Annotated image array, and count of detected objects.
+        tuple: (annotated_image, count) or (annotated_image, count, details_dict)
     """
     # 1. Convert to grayscale and normalize
     if len(image.shape) == 3:
@@ -36,14 +37,12 @@ def detect_objects(image: np.ndarray, is_rgb: bool = True) -> tuple[np.ndarray, 
     # 2. Extract structures based on channel type
     if is_rgb:
         # In colorized RGB, use edge-preserving smoothing and adaptive thresholding
-        # to identify boundaries made clear by the color translation
         blurred = cv2.bilateralFilter(gray, 5, 50, 50)
         edges = cv2.Canny(blurred, 30, 150)
-        # Dilate edges to close contours
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         processed = cv2.dilate(edges, kernel, iterations=1)
     else:
-        # In grayscale IR, use standard thresholding which misses color-only boundaries
+        # In grayscale IR, use standard thresholding
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         _, processed = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
@@ -53,20 +52,53 @@ def detect_objects(image: np.ndarray, is_rgb: bool = True) -> tuple[np.ndarray, 
     # Make a copy of the image to annotate
     annotated = image.copy()
     if len(annotated.shape) == 2:
-        # Convert grayscale IR to 3-channel grayscale so we can draw colored bounding boxes if needed
         annotated = cv2.cvtColor(annotated, cv2.COLOR_GRAY2RGB)
 
     count = 0
-    box_color = (0, 255, 0) if is_rgb else (255, 255, 255)  # Green for RGB, White for IR
+    box_color = (0, 255, 0) if is_rgb else (255, 255, 255)
+
+    # Categories tracking
+    details = {
+        "Building (House)": 0,
+        "Tree / Vegetation": 0,
+        "Water Body": 0,
+        "Vehicle / Road / Ground": 0,
+    }
 
     # 4. Filter contours by size to isolate object blobs
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        # Plausible object area range in 256x256 image
         if 20.0 <= area <= 2000.0:
             x, y, w, h = cv2.boundingRect(cnt)
-            # Draw bounding box
             cv2.rectangle(annotated, (x, y), (x + w, y + h), box_color, 2)
             count += 1
 
+            # Classify object category based on mask value at centroid
+            if mask is not None:
+                cx = int(x + w / 2)
+                cy = int(y + h / 2)
+                if 0 <= cy < mask.shape[0] and 0 <= cx < mask.shape[1]:
+                    cls_val = mask[cy, cx]
+                    if cls_val == 0:
+                        details["Water Body"] += 1
+                    elif cls_val == 1:
+                        details["Tree / Vegetation"] += 1
+                    elif cls_val == 2:
+                        details["Building (House)"] += 1
+                    else:
+                        details["Vehicle / Road / Ground"] += 1
+                else:
+                    details["Vehicle / Road / Ground"] += 1
+            else:
+                # Default heuristic if mask is unavailable
+                aspect_ratio = float(w) / max(1, h)
+                if 0.9 <= aspect_ratio <= 1.1:
+                    details["Building (House)"] += 1
+                elif area < 100:
+                    details["Vehicle / Road / Ground"] += 1
+                else:
+                    details["Tree / Vegetation"] += 1
+
+    if return_details:
+        return annotated, count, details
     return annotated, count
